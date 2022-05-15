@@ -37,14 +37,19 @@ def fit_curve_to_points(points_x, points_y):
     coeffs = np.polynomial.Polynomial.fit(points_x, points_y, 3)
     return coeffs.linspace(n=24, domain=[0,24])
 
-def main():
-    curves = read_curves()
-
-    peaks, peak_heights = find_peaks(curves[0])
-    troughs, trough_heights = find_troughs(curves[0])
+def polynomial_approx_curve(curve):
+    peaks, peak_heights = find_peaks(curve)
+    troughs, trough_heights = find_troughs(curve)
     peaks_fitted_curve = fit_curve_to_points(peaks, peak_heights)
     troughs_fitted_curve = fit_curve_to_points(troughs, trough_heights)
     average_fitted_curve = np.add(peaks_fitted_curve, troughs_fitted_curve)/2
+
+    return average_fitted_curve, (peaks, peak_heights, peaks_fitted_curve), (troughs, trough_heights, troughs_fitted_curve)
+
+def main():
+    curves = read_curves()
+
+    average_fitted_curve, (peaks, peak_heights, peaks_fitted_curve), (troughs, trough_heights, troughs_fitted_curve) = polynomial_approx_curve(curves[0])
 
     plt.plot(range(len(curves[0])), curves[0])
     plt.scatter(peaks, peak_heights, c="#34c754")
