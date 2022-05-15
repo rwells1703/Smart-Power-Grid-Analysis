@@ -44,13 +44,14 @@ def main():
     troughs, trough_heights = find_troughs(curves[0])
     peaks_fitted_curve = fit_curve_to_points(peaks, peak_heights)
     troughs_fitted_curve = fit_curve_to_points(troughs, trough_heights)
+    average_fitted_curve = np.add(peaks_fitted_curve, troughs_fitted_curve)/2
 
     plt.plot(range(len(curves[0])), curves[0])
     plt.scatter(peaks, peak_heights, c="#34c754")
     plt.scatter(troughs, trough_heights, c="#d93529")
     plt.plot(peaks_fitted_curve[0], peaks_fitted_curve[1])
     plt.plot(troughs_fitted_curve[0], troughs_fitted_curve[1])
-
+    plt.plot(average_fitted_curve[0], average_fitted_curve[1])
     plt.show()
 
 if __name__ == "__main__":
