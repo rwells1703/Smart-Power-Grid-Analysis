@@ -1,7 +1,6 @@
 import csv
 from matplotlib import pyplot as plt
 import numpy as np
-import scipy
 import scipy.signal as signal
 from scipy.interpolate import interp1d
 
