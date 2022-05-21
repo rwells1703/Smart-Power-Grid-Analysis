@@ -5,7 +5,7 @@ import scipy.signal as signal
 from scipy.interpolate import interp1d
 
 def read_curves():
-    with open("data\TestingData.csv") as file:
+    with open("data\TestingData.txt") as file:
         # Read the CSV file data
         reader = csv.reader(file)
 
