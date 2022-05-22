@@ -48,14 +48,8 @@ for u in users:
         user_equation.append(active_equation)
 
         # Ensure no energy is used outside of the range between ready_time and deadline
-        inactive_equation = ""
-        for i, hour in enumerate(inactive_hours):
-            inactive_equation += f"{t['name']}_{hour}"
-
-            if i != len(inactive_hours)-1:
-                inactive_equation += ","
-        inactive_equation += "=0;"
-        user_equation.append(inactive_equation)
+        for hour in inactive_hours:
+            user_equation.append(f"{t['name']}_{hour}=0;")
 
     # Create the objective function by adding up predicted energy prices multplied by possible usage hours
     objective_function = "c="
