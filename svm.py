@@ -7,21 +7,12 @@ def read_data(filepath):
         # Read the CSV file data
         reader = csv.reader(file)
 
-        data = []
-        # Store each line of the data into a list
-        for row in reader:
-            data.append([float(v) for v in row])
+# Average, applied to each curve in the data before it is used for fitting/prediction
+def preprocess_curve_avg(curve):
+    average = sum(curve)/len(curve)
+    curve = [average]
 
-    return data
-
-# Convert the training data into actual lists containing
-# the curves, and the labels
-def parse_training_data(data):
-    # Parse the data into curves and labels
-    curves = list(map(lambda c: c[:-1], data))
-    labels = list(map(lambda c: c[-1], data))
-
-    return curves, labels
+    return curve
 
 # Fit the classifier to the training data
 def train(curves, labels):
@@ -60,8 +51,7 @@ def display_accuracy(correct, incorrect, accuracy):
 
 
 def main():
-    data = read_data("data\\TrainingData.txt")
-    curves, labels = parse_training_data(data)
+    curves = list(map(preprocess_curve_avg, curves))
     classifier = train(curves, labels)
     predictions = predict(classifier, curves)
     correct, incorrect, accuracy = calculate_training_accuracy(predictions, labels)
