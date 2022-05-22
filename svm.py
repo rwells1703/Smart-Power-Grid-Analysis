@@ -53,10 +53,17 @@ def display_accuracy(correct, incorrect, accuracy):
     print(f"Incorrect: {incorrect}")
     print(f"Accuracy: {accuracy}")
 
-def display_testing_predictions(predictions):
+# Display the predictions, along with the number of 1s and 0s respectively
+def display_predictions(predictions):
     print(predictions)
     print(f"1: {np.count_nonzero(predictions == 1.0)}")
     print(f"0: {np.count_nonzero(predictions == 0.0)}")
+
+# Save the prediction array to a file in CSV format
+def save_predictions(predictions):
+    with open("results.csv","a") as f:
+        predictions = map(str, predictions)
+        f.write(",".join(predictions)+"\n")
 
 def predict_validation_data():
     # Load training and validation data from a file
@@ -93,10 +100,12 @@ def predict_testing_data():
 
     # Perform predictions on testing data
     predictions = predict(classifier, testing_data)
-    display_testing_predictions(predictions)
+    display_predictions(predictions)
+    save_predictions(predictions)
+
 
 def main():
     predict_testing_data()
 
 if __name__ == "__main__":
-        main()
+    main()
