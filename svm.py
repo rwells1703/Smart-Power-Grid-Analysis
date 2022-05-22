@@ -46,13 +46,26 @@ def display_accuracy(correct, incorrect, accuracy):
 
 
 def main():
+    # Load training/validation data from a file
     data = data_load.read_data("data\\TrainingData.txt")
-    curves, labels = data_load.parse_training_data(data)
-    curves = list(map(preprocess_curve_avg, curves))
-    classifier = train(curves, labels)
-    predictions = predict(classifier, curves)
-    correct, incorrect, accuracy = calculate_training_accuracy(predictions, labels)
+
+    # Take 10% of values as validation data, and the remaining as training data
+    training_data, validation_data = data_load.split_training_validation(data, 0.1)
+
+    # Extract curves and labels from training/verification data
+    training_curves, training_labels = data_load.parse_labelled_data(training_data)
+    validation_curves, validation_labels = data_load.parse_labelled_data(validation_data)
+
+    #curves = list(map(preprocess_curve_avg, curves))
+
+    # Train the classifier, and perform predictions on validation data
+    classifier = train(training_curves, training_labels)
+    predictions = predict(classifier, validation_curves)
+
+    # Display the accuacy results
+    correct, incorrect, accuracy = calculate_training_accuracy(predictions, validation_labels)
     display_accuracy(correct, incorrect, accuracy)
 
 if __name__ == "__main__":
-    main()
+    for i in range(1,10):
+        main()

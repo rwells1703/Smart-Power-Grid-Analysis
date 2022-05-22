@@ -1,5 +1,6 @@
 import csv
 from matplotlib import pyplot as plt
+import random
 
 # Read data from file
 def read_data(filepath):
@@ -14,15 +15,31 @@ def read_data(filepath):
 
     return data
 
-# Convert the training data into actual lists containing
-# the curves, and the labels
-def parse_training_data(data):
+# Convert the training (or verification) data into 
+# lists containing the curves and the labels
+def parse_labelled_data(data):
     # Parse the data into curves and labels
     curves = list(map(lambda c: c[:-1], data))
     labels = list(map(lambda c: c[-1], data))
 
     return curves, labels
 
+# Split labelled data into training and validation data sets
+def split_training_validation(data, target_proportion, seed=-1):
+    data_len = len(data)
+
+    if seed != -1:
+        random.seed(seed)
+
+    validation_data = []
+    proportion = 0
+    while proportion < target_proportion:
+        i = random.randint(0, len(data)-1)
+        validation_data.append(data.pop(i))
+        proportion = len(validation_data)/data_len
+    
+    return data, validation_data
+    
 # Save the training data curves and labels as images
 def save_training_images(curves, labels):
     for i in range(len(curves)):
