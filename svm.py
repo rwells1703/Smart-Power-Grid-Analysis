@@ -1,11 +1,6 @@
-import csv
 import sklearn.svm
 
-# Read data from file
-def read_data(filepath):
-    with open(filepath) as file:
-        # Read the CSV file data
-        reader = csv.reader(file)
+import data_load
 
 # Average, applied to each curve in the data before it is used for fitting/prediction
 def preprocess_curve_avg(curve):
@@ -51,6 +46,8 @@ def display_accuracy(correct, incorrect, accuracy):
 
 
 def main():
+    data = data_load.read_data("data\\TrainingData.txt")
+    curves, labels = data_load.parse_training_data(data)
     curves = list(map(preprocess_curve_avg, curves))
     classifier = train(curves, labels)
     predictions = predict(classifier, curves)

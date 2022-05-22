@@ -1,26 +1,9 @@
-import csv
 from matplotlib import pyplot as plt
 import numpy as np
 import scipy.signal as signal
 from scipy.interpolate import interp1d
 
-def read_curves():
-    with open("data\TestingData.txt") as file:
-        # Read the CSV file data
-        reader = csv.reader(file)
-
-        curves = []
-        # Store each line of the data into a list of curves
-        for row in reader:
-            curves.append([float(v) for v in row])
-
-    return curves
-
-def save_curve_images(curves):
-    for i, c in enumerate(curves):
-        plt.plot(range(len(c)), c)
-        plt.savefig("figures\\curve{number}.jpg".format(number=i+1), format="jpg")
-        plt.close()
+import data_load
 
 def find_peaks(curve):
     peaks = signal.find_peaks(curve)[0]
@@ -84,7 +67,7 @@ def empirical_mode_decomposition(curve, iterations):
     return imfs
 
 def main():
-    curves = read_curves()
+    curves = data_load.read_data("data\\TestingData.txt")
 
     imfs = empirical_mode_decomposition(curves[0], 50)
     for c in imfs:
@@ -92,7 +75,7 @@ def main():
     plt.show()
 
 def fit():
-    curves = read_curves()
+    curves = data_load.read_data("data\\TestingData.txt")
     c = curves[30]
 
     peaks = np.concatenate(([0], signal.find_peaks(c)[0], [len(c)-1]))
