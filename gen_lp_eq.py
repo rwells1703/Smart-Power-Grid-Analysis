@@ -8,7 +8,7 @@ equations = []
 for t in tasks:
     ready_time = t[0]
     deadline = t[1]
-    max_energy = t[2]
+    max_hourly_energy = t[2]
     energy_demand = t[3]
 
     hours = range(0, 24+1)
@@ -16,9 +16,9 @@ for t in tasks:
     active_hours = range(ready_time, deadline+1)
     inactive_hours = list(filter(lambda h : h not in active_hours, hours))
 
-    # Set the maximum energy limits during hours when energy can be used
+    # Set the maximum hourly energy limits during hours when energy can be used
     for hour in active_hours:
-        equations.append(f"0 <= x1_{hour} <= {max_energy};")
+        equations.append(f"0 <= x1_{hour} <= {max_hourly_energy};")
 
     # Ensure no energy is used outside of the range between ready_time and deadline
     inactive_equation = ""
