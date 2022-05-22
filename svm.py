@@ -1,3 +1,4 @@
+import numpy as np
 import sklearn.svm
 import sklearn.ensemble
 
@@ -52,9 +53,13 @@ def display_accuracy(correct, incorrect, accuracy):
     print(f"Incorrect: {incorrect}")
     print(f"Accuracy: {accuracy}")
 
+def display_testing_predictions(predictions):
+    print(predictions)
+    print(f"1: {np.count_nonzero(predictions == 1.0)}")
+    print(f"0: {np.count_nonzero(predictions == 0.0)}")
 
-def main():
-    # Load training/validation data from a file
+def predict_validation_data():
+    # Load training and validation data from a file
     data = data_load.read_data("data\\TrainingData.txt")
 
     # Take 10% of values as validation data, and the remaining as training data
@@ -63,8 +68,6 @@ def main():
     # Extract curves and labels from training/verification data
     training_curves, training_labels = data_load.parse_labelled_data(training_data)
     validation_curves, validation_labels = data_load.parse_labelled_data(validation_data)
-
-    #curves = list(map(preprocess_curve_avg, curves))
 
     # Train the classifier, and perform predictions on validation data
     classifier = train_bagging(training_curves, training_labels)
@@ -75,6 +78,25 @@ def main():
     correct, incorrect, accuracy = calculate_training_accuracy(predictions, validation_labels)
     display_accuracy(correct, incorrect, accuracy)
 
+def predict_testing_data():
+    # Load training data from a file
+    training_data = data_load.read_data("data\\TrainingData.txt")
+
+    # Extract curves and labels from training data
+    training_curves, training_labels = data_load.parse_labelled_data(training_data)
+
+    # Train the classifier
+    classifier = train_bagging(training_curves, training_labels)
+
+    # Load testing data from a file
+    testing_data = data_load.read_data("data\\TestingData.txt")
+
+    # Perform predictions on testing data
+    predictions = predict(classifier, testing_data)
+    display_testing_predictions(predictions)
+
+def main():
+    predict_testing_data()
+
 if __name__ == "__main__":
-    for i in range(1,10):
         main()

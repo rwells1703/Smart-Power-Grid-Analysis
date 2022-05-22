@@ -32,7 +32,7 @@ def split_training_validation(data, target_proportion, seed=-1):
         random.seed(seed)
 
     validation_data = []
-    proportion = 0
+    proportion = -1
     while proportion < target_proportion:
         i = random.randint(0, len(data)-1)
         validation_data.append(data.pop(i))
