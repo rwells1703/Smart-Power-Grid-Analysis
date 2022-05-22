@@ -1,8 +1,9 @@
 import csv
 import sklearn.svm
 
-def read_data():
-    with open("data\TrainingData.txt") as file:
+# Read data from file
+def read_data(filepath):
+    with open(filepath) as file:
         # Read the CSV file data
         reader = csv.reader(file)
 
@@ -13,24 +14,32 @@ def read_data():
 
     return data
 
-def main():
-    # Read training data from files
-    data = read_data()
-
+# Convert the training data into actual lists containing
+# the curves, and the labels
+def parse_training_data(data):
     # Parse the data into curves and labels
     curves = list(map(lambda c: c[:-1], data))
     labels = list(map(lambda c: c[-1], data))
 
-    # Fit the classifier to the data
+    return curves, labels
+
+# Fit the classifier to the training data
+def train(curves, labels):
     classifier = sklearn.svm.SVC()
     classifier.fit(curves, labels)
     print("Fitted")
 
-    # Make predictions based upon training data
+    return classifier
+
+# Make predictions based upon training data
+def predict(classifier, curves):
     predictions = classifier.predict(curves)
     print("Predicted")
 
-    # Verify the predictions
+    return predictions
+
+# Compare the predictions against the labels of the training data
+def calculate_training_accuracy(predictions, labels):
     correct = 0
     i = 0
     while i < len(predictions):
@@ -38,9 +47,25 @@ def main():
             correct += 1
         i += 1
 
+    incorrect = len(predictions)-correct
+    accuracy = correct/len(predictions)
+
+    return correct, incorrect, accuracy
+
+# Display training accuracy stats
+def display_accuracy(correct, incorrect, accuracy):
     print(f"Correct: {correct}")
-    print(f"Incorrect: {len(predictions)-correct}")
-    print(f"Accuracy: {correct/len(predictions)}")
+    print(f"Incorrect: {incorrect}")
+    print(f"Accuracy: {accuracy}")
+
+
+def main():
+    data = read_data("data\\TrainingData.txt")
+    curves, labels = parse_training_data(data)
+    classifier = train(curves, labels)
+    predictions = predict(classifier, curves)
+    correct, incorrect, accuracy = calculate_training_accuracy(predictions, labels)
+    display_accuracy(correct, incorrect, accuracy)
 
 if __name__ == "__main__":
     main()
