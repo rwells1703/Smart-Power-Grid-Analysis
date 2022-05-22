@@ -1,4 +1,5 @@
 import sklearn.svm
+import sklearn.ensemble
 
 import data_load
 
@@ -12,6 +13,13 @@ def preprocess_curve_avg(curve):
 # Fit the classifier to the training data
 def train(curves, labels):
     classifier = sklearn.svm.SVC()
+    classifier.fit(curves, labels)
+    print("Fitted")
+
+    return classifier
+
+def train_bagging(curves, labels):
+    classifier = sklearn.ensemble.BaggingClassifier(sklearn.svm.SVC(), n_estimators=10000)
     classifier.fit(curves, labels)
     print("Fitted")
 
@@ -59,7 +67,8 @@ def main():
     #curves = list(map(preprocess_curve_avg, curves))
 
     # Train the classifier, and perform predictions on validation data
-    classifier = train(training_curves, training_labels)
+    classifier = train_bagging(training_curves, training_labels)
+
     predictions = predict(classifier, validation_curves)
 
     # Display the accuacy results
