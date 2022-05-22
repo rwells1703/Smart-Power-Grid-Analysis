@@ -1,7 +1,9 @@
+# Define pricing guideline
 pricing = [
     5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
 ]
 
+# Define user tasks
 users = [
     [{"name": "x1", "info": (17, 19, 2, 3)},
      {"name": "x2", "info": (16, 20, 3, 9)}],
@@ -14,6 +16,7 @@ equations = []
 for u in users:
     all_hours = list(range(0, 24))
 
+    # Overall list of active hours (for all tasks belonging to this user)
     user_active_hours = [[] for i in range(24)]
     user_equation = []
 
@@ -21,6 +24,7 @@ for u in users:
     user_equation.append("min: c;")
 
     for t in u:
+        # Retreive task information
         ready_time = t["info"][0]
         deadline = t["info"][1]
         max_hourly_energy = t["info"][2]
@@ -56,12 +60,12 @@ for u in users:
 
     # Find out the final hour that can be occupied
     user_deadline = 0
-
     for hour in all_hours:
         for tasks in user_active_hours[hour]:
             if len(tasks) > 0:
                 user_deadline = hour
 
+    # Create an objective function for the total cost (to be minimised)
     for hour in all_hours:
         for i, task in enumerate(user_active_hours[hour]):
             # Add the hour price as a multiplier
@@ -71,11 +75,12 @@ for u in users:
             if hour != user_deadline or i != len(user_active_hours[hour])-1:
                 objective_function += "+"
     objective_function += ";"
-
     user_equation.append(objective_function)
 
+    # The linear equation for this user is ready to solve
     equations.append(user_equation)
 
+# Print out LPSolve code for each user
 for ue in equations:
     for e in ue:
         print(e)
