@@ -75,10 +75,19 @@ def print_all_scripts(scripts):
             print(statement)
         print("\n")
 
+# Save LPSolve code to script files
+def save_all_scripts(scripts):
+    for i, script in enumerate(scripts):
+        with open(f"lp_scripts\\{i}.lp","w") as f:
+            for statement in script:
+                f.write(f"{statement}\n")
+
 def schedule_real_tasks():
     # Define pricing guideline
-    pricing_data = data_load.read_data("data\\AbnormalGuidelinePricing.csv", "if")
-    pricing = list(map(lambda h : h[1], pricing_data))
+    #pricing_data = data_load.read_data("data\\AbnormalGuidelinePricing.csv", "if")
+    #pricing = list(map(lambda h : h[1], pricing_data))
+    pricing_data = data_load.read_data("data\\TestingData.txt", "f*")
+    pricing = pricing_data[0]
 
     # Define user tasks
     users = []
@@ -103,7 +112,7 @@ def schedule_real_tasks():
     for user in users:
         scripts.append(tasks_to_code(user, pricing))
 
-    print_all_scripts(scripts)
+    save_all_scripts(scripts)
 
 def main():
     schedule_real_tasks()
