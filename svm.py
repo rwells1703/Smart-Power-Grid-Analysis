@@ -65,6 +65,22 @@ def save_predictions(predictions):
         predictions = map(str, predictions)
         f.write(",".join(predictions)+"\n")
 
+def predict_training_data():
+    # Load training data from a file
+    training_data = data_load.read_data("data\\TrainingData.txt", "f*")
+
+    # Extract curves and labels from training data
+    training_curves, training_labels = data_load.parse_labelled_data(training_data)
+
+    # Train the classifier, and perform predictions on training data
+    classifier = train_bagging(training_curves, training_labels)
+    predictions = predict(classifier, training_curves)
+    display_predictions(predictions)
+    
+    # Display the accuacy results
+    correct, incorrect, accuracy = calculate_accuracy(predictions, training_labels)
+    display_accuracy(correct, incorrect, accuracy)
+
 def predict_validation_data():
     # Load training and validation data from a file
     data = data_load.read_data("data\\TrainingData.txt", "f*")
