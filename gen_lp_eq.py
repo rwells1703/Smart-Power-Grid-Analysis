@@ -1,4 +1,5 @@
 import data_load
+import os
 
 # Convert every task belonding to a user into a single set of linear equations to be solved
 def tasks_to_code(user, pricing):
@@ -76,43 +77,42 @@ def print_all_scripts(scripts):
         print("\n")
 
 # Save LPSolve code to script files
-def save_all_scripts(scripts):
+def save_all_scripts(scripts, sub_folder):
     for i, script in enumerate(scripts):
-        with open(f"lp_scripts\\user{i+1}.lp","w") as f:
+        filepath = f"lp_scripts\\{sub_folder}\\user{i+1}.lp"
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath,"w") as f:
             for statement in script:
                 f.write(f"{statement}\n")
 
 def schedule_real_tasks():
     # Define pricing guideline
-    #pricing_data = data_load.read_data("data\\AbnormalGuidelinePricing.csv", "if")
-    #pricing = list(map(lambda h : h[1], pricing_data))
     pricing_data = data_load.read_data("data\\TestingData.txt", "f*")
-    pricing = pricing_data[0]
+    for pricing_index, pricing in enumerate(pricing_data):
+        # Define user tasks
+        users = []
+        users_data = data_load.read_data("data\\UserTaskData.csv", "siiii")
 
-    # Define user tasks
-    users = []
-    users_data = data_load.read_data("data\\UserTaskData.csv", "siiii")
+        previous_user_name = ""
+        for current_user in users_data:
+            task_name = current_user[0]
+            ready_time = current_user[1]
+            deadline = current_user[2]
+            max_hourly_energy = current_user[3]
+            energy_demand = current_user[4]
 
-    previous_user_name = ""
-    for current_user in users_data:
-        task_name = current_user[0]
-        ready_time = current_user[1]
-        deadline = current_user[2]
-        max_hourly_energy = current_user[3]
-        energy_demand = current_user[4]
+            current_user_name = task_name.split("_")[0]
+            if current_user_name != previous_user_name:
+                users.append([])
+            previous_user_name = current_user_name
 
-        current_user_name = task_name.split("_")[0]
-        if current_user_name != previous_user_name:
-            users.append([])
-        previous_user_name = current_user_name
+            users[-1].append({"name":task_name, "ready_time":ready_time, "deadline":deadline, "max_hourly_energy":max_hourly_energy, "energy_demand":energy_demand})
 
-        users[-1].append({"name":task_name, "ready_time":ready_time, "deadline":deadline, "max_hourly_energy":max_hourly_energy, "energy_demand":energy_demand})
+        scripts = []
+        for user in users:
+            scripts.append(tasks_to_code(user, pricing))
 
-    scripts = []
-    for user in users:
-        scripts.append(tasks_to_code(user, pricing))
-
-    save_all_scripts(scripts)
+        save_all_scripts(scripts, pricing_index)
 
 def main():
     schedule_real_tasks()

@@ -42,16 +42,17 @@ def aggregate_hour_values(hour_values):
     return hour_totals
 
 def main():
-    combined_hour_values = []
-    for i in range(0,5):
-        script_path = f"lp_scripts\\user{i+1}.lp"
-        stdout = run_script(script_path)
-        task_schedule = parse_task_schedule(stdout)
-        hour_values = get_hour_values(task_schedule)
-        combined_hour_values += hour_values
+    for i in range(0,100):
+        combined_hour_values = []
+        for j in range(0,5):
+            script_path = f"lp_scripts\\{i}\\user{j+1}.lp"
+            stdout = run_script(script_path)
+            task_schedule = parse_task_schedule(stdout)
+            hour_values = get_hour_values(task_schedule)
+            combined_hour_values += hour_values
 
-    hour_totals = aggregate_hour_values(combined_hour_values)
-    print(hour_totals)
+        hour_totals = aggregate_hour_values(combined_hour_values)
+        print(f"curve{i+1}:{hour_totals}")
 
 if __name__ == "__main__":
     main()
