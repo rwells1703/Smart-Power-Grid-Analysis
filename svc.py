@@ -74,6 +74,17 @@ def save_predictions(predictions):
         predictions = map(str, predictions)
         f.write(",".join(predictions)+"\n")
 
+def save_testing_results(curves, predictions):
+    i = 0
+    while i < len(curves):
+        curves[i].append(predictions[i])
+        i += 1
+
+    with open("results\\TestingResults.txt","w") as f:
+        for c in curves:
+            c = map(str, c)
+            f.write(",".join(c)+"\n")
+
 # Perform predictions and accuracy testing on the training data (already seen before)
 def predict_training_data():
     # Load training data from a file
@@ -117,7 +128,7 @@ def predict_validation_data():
     return predictions, validation_curves
 
 # Perform predictions on the testing data
-def predict_testing_data():
+def predict_testing_data(save=False):
     # Load training data from a file
     training_data = data_load.read_data("data\\TrainingData.txt", "f*")
 
@@ -132,8 +143,12 @@ def predict_testing_data():
 
     # Perform predictions on testing data
     predictions = predict(classifier, testing_curves)
+
+    # Display and save results
     display_predictions(predictions)
-    save_predictions(predictions)
+    if save:
+        save_testing_results(testing_curves, predictions)
+
 
     return predictions, testing_curves
 
