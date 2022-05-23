@@ -1,3 +1,6 @@
+import data_load
+
+# Convert every task belonding to a user into a single set of linear equations to be solved
 def tasks_to_code(user, pricing):
     script = []
 
@@ -11,10 +14,10 @@ def tasks_to_code(user, pricing):
 
     for task in user:
         # Retreive task information
-        ready_time = task['info'][0]
-        deadline = task['info'][1]
-        max_hourly_energy = task['info'][2]
-        energy_demand = task['info'][3]
+        ready_time = task['ready_time']
+        deadline = task['deadline']
+        max_hourly_energy = task['max_hourly_energy']
+        energy_demand = task['energy_demand']
         
         active_hours = list(range(ready_time, deadline+1))
         inactive_hours = list(filter(lambda h : h not in active_hours, all_hours))
@@ -72,25 +75,38 @@ def print_all_scripts(scripts):
             print(statement)
         print("\n")
 
-def main():
+def schedule_real_tasks():
     # Define pricing guideline
-    pricing = [
-        5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
-    ]
+    pricing_data = data_load.read_data("data\\AbnormalGuidelinePricing.csv", "if")
+    pricing = list(map(lambda h : h[1], pricing_data))
 
     # Define user tasks
-    users = [
-        [{"name": "x1", "info": (17, 19, 2, 3)},
-        {"name": "x2", "info": (16, 20, 3, 9)}],
-        [{"name": "x1", "info": (12, 18, 1, 4)},
-        {"name": "x2", "info": (20, 23, 3, 6)}]
-    ]
+    users = []
+    users_data = data_load.read_data("data\\UserTaskData.csv", "siiii")
+
+    previous_user_name = ""
+    for current_user in users_data:
+        task_name = current_user[0]
+        ready_time = current_user[1]
+        deadline = current_user[2]
+        max_hourly_energy = current_user[3]
+        energy_demand = current_user[4]
+
+        current_user_name = task_name.split("_")[0]
+        if current_user_name != previous_user_name:
+            users.append([])
+        previous_user_name = current_user_name
+
+        users[-1].append({"name":task_name, "ready_time":ready_time, "deadline":deadline, "max_hourly_energy":max_hourly_energy, "energy_demand":energy_demand})
 
     scripts = []
     for user in users:
         scripts.append(tasks_to_code(user, pricing))
 
     print_all_scripts(scripts)
+
+def main():
+    schedule_real_tasks()
 
 if __name__ == "__main__":
     main()
