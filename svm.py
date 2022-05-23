@@ -78,8 +78,8 @@ def predict_validation_data():
 
     # Train the classifier, and perform predictions on validation data
     classifier = train_bagging(training_curves, training_labels)
-
     predictions = predict(classifier, validation_curves)
+    display_predictions(predictions)
 
     # Display the accuacy results
     correct, incorrect, accuracy = calculate_accuracy(predictions, validation_labels)
