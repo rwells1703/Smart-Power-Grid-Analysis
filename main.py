@@ -4,7 +4,7 @@ import lp_generate
 import lp_solve
 
 def main():
-    lp_generate.schedule_real_tasks()
+    lp_generate.create_scheduling_scripts()
 
     # The predictions obtained from running the SVM with a high number of bagging estimators
     curves = data_load.read_data("data\\TestingData.txt", "f*")

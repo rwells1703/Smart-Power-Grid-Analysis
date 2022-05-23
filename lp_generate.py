@@ -85,7 +85,8 @@ def save_all_scripts(scripts, sub_folder):
             for statement in script:
                 f.write(f"{statement}\n")
 
-def schedule_real_tasks():
+# Create scheduling scripts for all testing pricing curves
+def create_scheduling_scripts():
     # Define pricing guideline
     pricing_data = data_load.read_data("data\\TestingData.txt", "f*")
     for pricing_index, pricing in enumerate(pricing_data):
@@ -117,7 +118,7 @@ def schedule_real_tasks():
         save_all_scripts(scripts, pricing_index)
 
 def main():
-    schedule_real_tasks()
+    create_scheduling_scripts()
 
 if __name__ == "__main__":
     main()
