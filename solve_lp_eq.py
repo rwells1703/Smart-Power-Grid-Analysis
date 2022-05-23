@@ -41,8 +41,8 @@ def aggregate_hour_values(hour_values):
 
     return hour_totals
 
-def main():
-    for i in range(0,100):
+def display_curve_schedules(curve_indexes):
+    for i in curve_indexes:
         combined_hour_values = []
         for j in range(0,5):
             script_path = f"lp_scripts\\{i}\\user{j+1}.lp"
@@ -52,7 +52,10 @@ def main():
             combined_hour_values += hour_values
 
         hour_totals = aggregate_hour_values(combined_hour_values)
-        print(f"curve{i+1}:{hour_totals}")
+        print(f"curve{i}:{hour_totals}")
+
+def main():
+    display_curve_schedules([0, 1, 4, 5, 7, 8, 12, 15, 16, 17, 18, 19, 21, 25, 27, 29, 31, 34, 37, 38, 45, 47, 48, 50, 52, 54, 55, 56, 58, 63, 64, 67, 68, 69, 73, 76, 77, 78, 79, 80, 81, 83, 84, 85, 86, 87, 88, 89, 93, 94, 95, 98])
 
 if __name__ == "__main__":
     main()
