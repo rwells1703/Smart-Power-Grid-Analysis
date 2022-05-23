@@ -33,8 +33,8 @@ def predict(classifier, curves):
 
     return predictions
 
-# Compare the predictions against the labels of the training data
-def calculate_training_accuracy(predictions, labels):
+# Compare the predictions against the labels of the data
+def calculate_accuracy(predictions, labels):
     correct = 0
     i = 0
     while i < len(predictions):
@@ -47,7 +47,7 @@ def calculate_training_accuracy(predictions, labels):
 
     return correct, incorrect, accuracy
 
-# Display training accuracy stats
+# Display accuracy stats for predictions on labelled data
 def display_accuracy(correct, incorrect, accuracy):
     print(f"Correct: {correct}")
     print(f"Incorrect: {incorrect}")
@@ -82,7 +82,7 @@ def predict_validation_data():
     predictions = predict(classifier, validation_curves)
 
     # Display the accuacy results
-    correct, incorrect, accuracy = calculate_training_accuracy(predictions, validation_labels)
+    correct, incorrect, accuracy = calculate_accuracy(predictions, validation_labels)
     display_accuracy(correct, incorrect, accuracy)
 
 def predict_testing_data():
