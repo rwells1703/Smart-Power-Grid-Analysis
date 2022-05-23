@@ -19,6 +19,7 @@ def train(curves, labels):
 
     return classifier
 
+# Fit the classifier (with bagging) to the training data
 def train_bagging(curves, labels):
     classifier = sklearn.ensemble.BaggingClassifier(sklearn.svm.SVC(), n_estimators=100)
     classifier.fit(curves, labels)
@@ -73,6 +74,7 @@ def save_predictions(predictions):
         predictions = map(str, predictions)
         f.write(",".join(predictions)+"\n")
 
+# Perform predictions and accuracy testing on the training data (already seen before)
 def predict_training_data():
     # Load training data from a file
     training_data = data_load.read_data("data\\TrainingData.txt", "f*")
@@ -91,6 +93,7 @@ def predict_training_data():
 
     return predictions
 
+# Perform predictions and accuracy testing on a "validation" subset of the training data
 def predict_validation_data():
     # Load training and validation data from a file
     data = data_load.read_data("data\\TrainingData.txt", "f*")
@@ -113,6 +116,7 @@ def predict_validation_data():
 
     return predictions
 
+# Perform predictions on the testing data
 def predict_testing_data():
     # Load training data from a file
     training_data = data_load.read_data("data\\TrainingData.txt", "f*")

@@ -95,12 +95,14 @@ def schedule_real_tasks():
 
         previous_user_name = ""
         for current_user in users_data:
+            # Seperate tasks by user
             task_name = current_user[0]
             ready_time = current_user[1]
             deadline = current_user[2]
             max_hourly_energy = current_user[3]
             energy_demand = current_user[4]
 
+            # Check if the user is different since the last iteration
             current_user_name = task_name.split("_")[0]
             if current_user_name != previous_user_name:
                 users.append([])
