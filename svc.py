@@ -91,7 +91,7 @@ def predict_training_data():
     correct, incorrect, accuracy = calculate_accuracy(predictions, training_labels)
     display_accuracy(correct, incorrect, accuracy)
 
-    return predictions
+    return predictions, training_curves
 
 # Perform predictions and accuracy testing on a "validation" subset of the training data
 def predict_validation_data():
@@ -114,7 +114,7 @@ def predict_validation_data():
     correct, incorrect, accuracy = calculate_accuracy(predictions, validation_labels)
     display_accuracy(correct, incorrect, accuracy)
 
-    return predictions
+    return predictions, validation_curves
 
 # Perform predictions on the testing data
 def predict_testing_data():
@@ -135,10 +135,10 @@ def predict_testing_data():
     display_predictions(predictions)
     save_predictions(predictions)
 
-    return predictions
+    return predictions, testing_curves
 
 def main():
-    predict_testing_data()
+    predictions, curves = predict_testing_data()
 
 if __name__ == "__main__":
     main()
