@@ -78,7 +78,7 @@ def print_all_scripts(scripts):
 # Save LPSolve code to script files
 def save_all_scripts(scripts):
     for i, script in enumerate(scripts):
-        with open(f"lp_scripts\\{i}.lp","w") as f:
+        with open(f"lp_scripts\\user{i+1}.lp","w") as f:
             for statement in script:
                 f.write(f"{statement}\n")
 
