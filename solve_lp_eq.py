@@ -41,6 +41,7 @@ def aggregate_hour_values(hour_values):
 
     return hour_totals
 
+# For each pricing curve specified, display its optimal scheduling
 def display_curve_schedules(curve_indexes):
     for i in curve_indexes:
         combined_hour_values = []
@@ -55,7 +56,7 @@ def display_curve_schedules(curve_indexes):
         print(f"curve{i}:{hour_totals}")
 
 def main():
-    display_curve_schedules([0, 1, 4, 5, 7, 8, 12, 15, 16, 17, 18, 19, 21, 25, 27, 29, 31, 34, 37, 38, 45, 47, 48, 50, 52, 54, 55, 56, 58, 63, 64, 67, 68, 69, 73, 76, 77, 78, 79, 80, 81, 83, 84, 85, 86, 87, 88, 89, 93, 94, 95, 98])
+    pass
 
 if __name__ == "__main__":
     main()

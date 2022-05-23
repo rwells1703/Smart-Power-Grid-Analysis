@@ -20,7 +20,7 @@ def train(curves, labels):
     return classifier
 
 def train_bagging(curves, labels):
-    classifier = sklearn.ensemble.BaggingClassifier(sklearn.svm.SVC(), n_estimators=10000)
+    classifier = sklearn.ensemble.BaggingClassifier(sklearn.svm.SVC(), n_estimators=100)
     classifier.fit(curves, labels)
     print("Fitted")
 
@@ -59,9 +59,17 @@ def display_predictions(predictions):
     print(f"1: {np.count_nonzero(predictions == 1.0)}")
     print(f"0: {np.count_nonzero(predictions == 0.0)}")
 
+# Return the index numbers of every pricing curve that is predicted to be abnormal
+def get_abormal_curves(predictions):
+    indexes = []
+    for i in range(len(predictions)):
+        if predictions[i] == 1.0:
+            indexes.append(i)
+    return indexes
+
 # Save the prediction array to a file in CSV format
 def save_predictions(predictions):
-    with open("results.csv","a") as f:
+    with open("results\\results.csv","a") as f:
         predictions = map(str, predictions)
         f.write(",".join(predictions)+"\n")
 
@@ -80,6 +88,8 @@ def predict_training_data():
     # Display the accuacy results
     correct, incorrect, accuracy = calculate_accuracy(predictions, training_labels)
     display_accuracy(correct, incorrect, accuracy)
+
+    return predictions
 
 def predict_validation_data():
     # Load training and validation data from a file
@@ -101,6 +111,8 @@ def predict_validation_data():
     correct, incorrect, accuracy = calculate_accuracy(predictions, validation_labels)
     display_accuracy(correct, incorrect, accuracy)
 
+    return predictions
+
 def predict_testing_data():
     # Load training data from a file
     training_data = data_load.read_data("data\\TrainingData.txt", "f*")
@@ -119,6 +131,7 @@ def predict_testing_data():
     display_predictions(predictions)
     save_predictions(predictions)
 
+    return predictions
 
 def main():
     predict_testing_data()
