@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 import re
 import subprocess
 
@@ -41,8 +42,9 @@ def aggregate_hour_values(hour_values):
 
     return hour_totals
 
-# For each pricing curve specified, display its optimal scheduling
-def display_curve_schedules(curve_indexes):
+# For each pricing curve specified, get its optimal scheduling
+def get_curve_schedules(curve_indexes):
+    all_hour_totals = []
     for i in curve_indexes:
         combined_hour_values = []
         for j in range(0,5):
@@ -53,10 +55,22 @@ def display_curve_schedules(curve_indexes):
             combined_hour_values += hour_values
 
         hour_totals = aggregate_hour_values(combined_hour_values)
-        print(f"curve{i}:{hour_totals}")
+        all_hour_totals.append(hour_totals)
+    return all_hour_totals
 
-def main():
-    pass
+# Display curve optimal schedulings as text
+def display_curve_schedules(curve_indexes, all_hour_totals):
+    i = 0
+    while i < len(all_hour_totals):
+        print(f"curve{curve_indexes[i]}:{all_hour_totals[i]}")
+        i += 1
 
-if __name__ == "__main__":
-    main()
+# Display curve optimal schedulings as bar graphs
+def graph_curve_schedules(curve_indexes, all_hour_totals):
+    i = 0
+    while i < len(all_hour_totals):
+        plt.title(f"Curve {curve_indexes[i]}")
+        plt.bar(list(range(0,24)), all_hour_totals[i])
+        plt.savefig(f"schedules\\curve{curve_indexes[i]}.jpg")
+        plt.close()
+        i += 1
