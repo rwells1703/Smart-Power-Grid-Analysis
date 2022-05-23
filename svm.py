@@ -67,7 +67,7 @@ def save_predictions(predictions):
 
 def predict_validation_data():
     # Load training and validation data from a file
-    data = data_load.read_data("data\\TrainingData.txt")
+    data = data_load.read_data("data\\TrainingData.txt", "f*")
 
     # Take 10% of values as validation data, and the remaining as training data
     training_data, validation_data = data_load.split_training_validation(data, 0.1)
@@ -87,7 +87,7 @@ def predict_validation_data():
 
 def predict_testing_data():
     # Load training data from a file
-    training_data = data_load.read_data("data\\TrainingData.txt")
+    training_data = data_load.read_data("data\\TrainingData.txt", "f*")
 
     # Extract curves and labels from training data
     training_curves, training_labels = data_load.parse_labelled_data(training_data)
@@ -96,7 +96,7 @@ def predict_testing_data():
     classifier = train_bagging(training_curves, training_labels)
 
     # Load testing data from a file
-    testing_data = data_load.read_data("data\\TestingData.txt")
+    testing_data = data_load.read_data("data\\TestingData.txt", "f*")
 
     # Perform predictions on testing data
     predictions = predict(classifier, testing_data)

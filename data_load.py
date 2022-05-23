@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import random
 
 # Read data from file
-def read_data(filepath):
+def read_data(filepath, dtype):
     with open(filepath) as file:
         # Read the CSV file data
         reader = csv.reader(file)
@@ -11,7 +11,22 @@ def read_data(filepath):
         data = []
         # Store each line of the data into a list
         for row in reader:
-            data.append([float(v) for v in row])
+            # Remove the Byte Order Mark, sometimes present at the start of a string of data
+            row = list(map(lambda v : v.replace("ï»¿",""), row))
+
+            if dtype == "f*":
+                data.append([float(v) for v in row])
+            else:
+                i = 0
+                while i < len(row):
+                    if dtype[i] == "i":
+                        row[i] = int(row[i])
+                    elif dtype[i] == "f":
+                        row[i] = float(row[i])
+                    elif dtype[i] == "s":
+                        pass
+                    i += 1
+                data.append(row)
 
     return data
 

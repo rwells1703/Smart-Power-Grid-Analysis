@@ -67,7 +67,7 @@ def empirical_mode_decomposition(curve, iterations):
     return imfs
 
 def main():
-    curves = data_load.read_data("data\\TestingData.txt")
+    curves = data_load.read_data("data\\TestingData.txt", "f*")
 
     imfs = empirical_mode_decomposition(curves[0], 50)
     for c in imfs:
@@ -75,7 +75,7 @@ def main():
     plt.show()
 
 def fit():
-    curves = data_load.read_data("data\\TestingData.txt")
+    curves = data_load.read_data("data\\TestingData.txt", "f*")
     c = curves[30]
 
     peaks = np.concatenate(([0], signal.find_peaks(c)[0], [len(c)-1]))
