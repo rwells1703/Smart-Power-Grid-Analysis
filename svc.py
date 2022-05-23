@@ -128,10 +128,10 @@ def predict_testing_data():
     classifier = train_bagging(training_curves, training_labels)
 
     # Load testing data from a file
-    testing_data = data_load.read_data("data\\TestingData.txt", "f*")
+    testing_curves = data_load.read_data("data\\TestingData.txt", "f*")
 
     # Perform predictions on testing data
-    predictions = predict(classifier, testing_data)
+    predictions = predict(classifier, testing_curves)
     display_predictions(predictions)
     save_predictions(predictions)
 
