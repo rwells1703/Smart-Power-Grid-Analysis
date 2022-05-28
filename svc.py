@@ -1,4 +1,6 @@
 import numpy as np
+import random
+from sklearn.model_selection import GridSearchCV
 import sklearn.svm
 import sklearn.ensemble
 
@@ -19,6 +21,14 @@ def train(curves, labels):
 
     return classifier
 
+# Fit the classifier to the training data using optimized C and Gamma
+def train_optimized(curves, labels):
+    classifier = sklearn.svm.SVC(C=10, gamma=0.1)
+    classifier.fit(curves, labels)
+    print("Fitted")
+
+    return classifier
+
 # Fit the classifier (with bagging) to the training data
 def train_bagging(curves, labels):
     classifier = sklearn.ensemble.BaggingClassifier(sklearn.svm.SVC(), n_estimators=100)
@@ -26,6 +36,21 @@ def train_bagging(curves, labels):
     print("Fitted")
 
     return classifier
+
+# Try many different parameters of C and gamma to maximise the accuracy
+def find_optimized_params(curves, labels):
+    # Possible values of C and Gamma listed
+    param_grid = [{'C': [0.01, 0.1, 1, 10, 100], 'gamma': [0.01, 0.1, 1, 10, 100], 'kernel': ['rbf']}]
+    classifier = GridSearchCV(sklearn.svm.SVC(), param_grid, verbose=3)
+    classifier.fit(curves, labels)
+    print("Fitted")
+
+    print("Parameters:")
+    print(classifier.best_params_)
+    print(classifier.best_score_)
+    print(classifier.best_estimator_)
+
+    return classifier.best_estimator_
 
 # Make predictions based upon training data
 def predict(classifier, curves):
@@ -36,12 +61,17 @@ def predict(classifier, curves):
 
 # Compare the predictions against the labels of the data
 def calculate_accuracy(predictions, labels):
+    correct_nums = []
     correct = 0
     i = 0
     while i < len(predictions):
         if predictions[i] == labels[i]:
             correct += 1
+            correct_nums += "y"
+        else:
+            correct_nums += "n"
         i += 1
+    print(correct_nums)
 
     incorrect = len(predictions)-correct
     accuracy = correct/len(predictions)
@@ -74,10 +104,11 @@ def save_predictions(predictions):
         predictions = map(str, predictions)
         f.write(",".join(predictions)+"\n")
 
+# Save each testing curve followed by its classification (1 or 0) in CSV format
 def save_testing_results(curves, predictions):
     i = 0
     while i < len(curves):
-        curves[i].append(predictions[i])
+        curves[i].append(int(predictions[i]))
         i += 1
 
     with open("results\\TestingResults.txt","w") as f:
@@ -89,6 +120,7 @@ def save_testing_results(curves, predictions):
 def predict_training_data():
     # Load training data from a file
     training_data = data_load.read_data("data\\TrainingData.txt", "f*")
+    random.shuffle(training_data)
 
     # Extract curves and labels from training data
     training_curves, training_labels = data_load.parse_labelled_data(training_data)
@@ -108,16 +140,17 @@ def predict_training_data():
 def predict_validation_data():
     # Load training and validation data from a file
     data = data_load.read_data("data\\TrainingData.txt", "f*")
+    random.shuffle(data)
 
     # Take 10% of values as validation data, and the remaining as training data
-    training_data, validation_data = data_load.split_training_validation(data, 0.1)
+    training_data, validation_data = data_load.split_training_validation(data, 0.2, 123)
 
     # Extract curves and labels from training/verification data
     training_curves, training_labels = data_load.parse_labelled_data(training_data)
     validation_curves, validation_labels = data_load.parse_labelled_data(validation_data)
 
     # Train the classifier, and perform predictions on validation data
-    classifier = train_bagging(training_curves, training_labels)
+    classifier = train(training_curves, training_labels)
     predictions = predict(classifier, validation_curves)
     display_predictions(predictions)
 
@@ -131,12 +164,13 @@ def predict_validation_data():
 def predict_testing_data(save=False):
     # Load training data from a file
     training_data = data_load.read_data("data\\TrainingData.txt", "f*")
+    random.shuffle(training_data)
 
     # Extract curves and labels from training data
     training_curves, training_labels = data_load.parse_labelled_data(training_data)
 
     # Train the classifier
-    classifier = train_bagging(training_curves, training_labels)
+    classifier = train(training_curves, training_labels)
 
     # Load testing data from a file
     testing_curves = data_load.read_data("data\\TestingData.txt", "f*")
@@ -149,11 +183,11 @@ def predict_testing_data(save=False):
     if save:
         save_testing_results(testing_curves, predictions)
 
-
     return predictions, testing_curves
 
 def main():
-    predictions, curves = predict_testing_data()
+    #predictions, curves = predict_testing_data(save=True)
+    predictions, curves = predict_validation_data()
 
 if __name__ == "__main__":
     main()
